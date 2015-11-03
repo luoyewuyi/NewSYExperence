@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<array>
+	<dict>
+		<key>name</key>
+		<string>Simpholders</string>
+		<key>brief</key>
+		<string>帮助定位模拟器调试的程序的沙盒位置</string>
+	</dict>
+	<dict>
+		<key>name</key>
+		<string>Charles</string>
+		<key>brief</key>
+		<string>网络抓包工具</string>
+	</dict>
+</array>
+</plist>

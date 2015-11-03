@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "__37-[SYNetWorkViewController sendAsync:]_block_invoke:SYNetWorkViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "data">
+            </PersistentString>
+            <PersistentString
+               value = "response">
+            </PersistentString>
+            <PersistentString
+               value = "connectionError">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "-[SYNetWorkViewController login:]:SYNetWorkViewController.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "connectionError">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+      <ContextState
+         contextName = "__38-[SecondTableViewController addGroup0]_block_invoke26:SecondTableViewController.m">
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>
