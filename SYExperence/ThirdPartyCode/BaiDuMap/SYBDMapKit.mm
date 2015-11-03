@@ -135,6 +135,8 @@ SYSharedInstance_m();
         
         _mapView.userTrackingMode = BMKUserTrackingModeFollow;//设置定位的状态
         _mapView.showsUserLocation = YES;//显示定位图层
+        //
+        _mapView.isSelectedAnnotationViewFront = YES;
         
         // 回车位按钮
         UIButton* userPos = [UIButton buttonWithType:UIButtonTypeCustom];
@@ -203,6 +205,8 @@ SYSharedInstance_m();
 
 - (void)actionUserPos:(id)sender
 {
+    // 指南针
+    _mapView.compassPosition = CGPointMake(10, 100);
     _mapView.centerCoordinate = _locService.userLocation.location.coordinate;
 }
 @end
