@@ -9,14 +9,16 @@
 #import "SYBDMainMapViewController.h"
 #import "SYBDMapKit.h"
 #import "MBProgressHUD+SY.h"
-@interface SYBDMainMapViewController () <BMKMapViewDelegate, BMKGeoCodeSearchDelegate, BMKPoiSearchDelegate>
-{
-    BMKMapView*     _mapView;
-    // search
-    bool            _isGeoSearch;
-    int             _curPage;
-    NSString*       _cityName;
 
+@interface SYBDMainMapViewController () <BMKMapViewDelegate, BMKGeoCodeSearchDelegate, BMKPoiSearchDelegate,BNNaviUIManagerDelegate,BNNaviRoutePlanDelegate>
+{
+    BMKMapView*             _mapView;
+    // search
+    bool                    _isGeoSearch;
+    int                     _curPage;
+    NSString*               _cityName;
+    // navi
+    CLLocationCoordinate2D  _destination;
 }
 
 @property (nonatomic, strong)   BMKGeoCodeSearch*   geocodesearch;
@@ -55,6 +57,13 @@
     {
         _mapView = (BMKMapView*)[SYBDMapKit sharedInstance].mapView;
         [weakSelf.view addSubview:_mapView];
+    }
+    //
+    if (![SYBDMapKit sharedInstance].isNaviSuc) {
+        [[SYBDMapKit sharedInstance] startupNavi:^(BOOL isSuc) {
+            //
+            NSLog(@"navi initialize %d", isSuc);
+        }];
     }
 }
 
@@ -181,6 +190,96 @@
         // 各种情况的判断。。。
     }
     [MBProgressHUD hideHUD];
+}
+#pragma mark - 点击气泡
+- (void)mapViewDidFinishLoading:(BMKMapView *)mapView
+{
+    NSLog(@"mapViewDidFinishLoading");
+}
+- (void)mapView:(BMKMapView *)mapView didSelectAnnotationView:(BMKAnnotationView *)view
+{
+    _destination = view.annotation.coordinate;
+    
+    [self realNavi];
+}
+
+#pragma mark -
+#pragma mark 导航
+//真实GPS导航
+- (void)realNavi
+{
+    if (![self checkServicesInited])
+    {
+        return;
+    }
+    [self startNavi];
+}
+
+- (BOOL)checkServicesInited
+{
+    if(![BNCoreServices_Instance isServicesInited])
+    {
+        UIAlertView *alertView = [[UIAlertView alloc] initWithTitle:@"提示"
+                                                            message:@"引擎尚未初始化完成，请稍后再试"
+                                                           delegate:nil
+                                                  cancelButtonTitle:@"我知道了"
+                                                  otherButtonTitles:nil];
+        [alertView show];
+        return NO;
+    }
+    return YES;
+}
+
+- (void)startNavi
+{
+    NSMutableArray *nodesArray = [[NSMutableArray alloc]initWithCapacity:2];
+    //起点 传入的是原始的经纬度坐标，若使用的是百度地图坐标，可以使用BNTools类进行坐标转化
+    BNRoutePlanNode *startNode = [[BNRoutePlanNode alloc] init];
+    startNode.pos = [[BNPosition alloc] init];
+    startNode.pos.x = /*113.936392;*/[SYBDMapKit sharedInstance].locService.userLocation.location.coordinate.longitude;
+    startNode.pos.y = /*22.547058;*/[SYBDMapKit sharedInstance].locService.userLocation.location.coordinate.latitude;
+    startNode.pos.eType = BNCoordinate_BaiduMapSDK;
+    [nodesArray addObject:startNode];
+    
+    //也可以在此加入1到3个的途经点
+    
+    
+    //终点
+    BNRoutePlanNode *endNode = [[BNRoutePlanNode alloc] init];
+    endNode.pos = [[BNPosition alloc] init];
+    endNode.pos.x = /*114.077075;*/_destination.longitude;
+    endNode.pos.y = /*22.543634;*/_destination.latitude;
+    endNode.pos.eType = BNCoordinate_BaiduMapSDK;
+    [nodesArray addObject:endNode];
+    
+    [BNCoreServices_RoutePlan startNaviRoutePlan:BNRoutePlanMode_Highway naviNodes:nodesArray time:nil delegete:self userInfo:nil];
+}
+
+#pragma mark - BNNaviRoutePlanDelegate
+//算路成功回调
+-(void)routePlanDidFinished:(NSDictionary *)userInfo
+{
+    NSLog(@"算路成功");
+    //路径规划成功，开始导航
+    [BNCoreServices_UI showNaviUI:BN_NaviTypeReal delegete:self isNeedLandscape:YES];
+}
+
+//算路失败回调
+- (void)routePlanDidFailedWithError:(NSError *)error andUserInfo:(NSDictionary *)userInfo
+{
+    NSLog(@"算路失败");
+    if ([error code] == BNRoutePlanError_LocationFailed) {
+        NSLog(@"获取地理位置失败");
+    }
+    else if ([error code] == BNRoutePlanError_LocationServiceClosed)
+    {
+        NSLog(@"定位服务未开启");
+    }
+}
+
+//算路取消回调
+-(void)routePlanDidUserCanceled:(NSDictionary*)userInfo {
+    NSLog(@"算路取消");
 }
 
 @end

@@ -66,14 +66,16 @@ SYSharedInstance_m();
     self.naviHander = hander;
     //初始化导航SDK
     if (!_isNaviSuc) {
-        //        [BNCoreServices_Instance initServices:mapKey];
-        //        [BNCoreServices_Instance startServicesAsyn:^{
-        //            //
-        //            _isNaviSuc = YES;
-        //        } fail:^{
-        //            //
-        //            _isNaviSuc = NO;
-        //        }];
+                [BNCoreServices_Instance initServices:mapKey];
+                [BNCoreServices_Instance startServicesAsyn:^{
+                    //
+                    _isNaviSuc = YES;
+                    self.naviHander(YES);
+                } fail:^{
+                    //
+                    _isNaviSuc = NO;
+                    self.naviHander(YES);
+                }];
     }
 }
 

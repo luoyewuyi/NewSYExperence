@@ -19,6 +19,8 @@
  5 地图显示前，下面两个函数要注意调用
     [_mapView viewWillAppear];
     _mapView.delegate = self;
+ 6 
+ -l"sqlite3.0" -framework "CoreGraphics" -framework "ImageIO" -framework "MobileCoreServices" -framework "QuartzCore" -framework "Security" -framework "SystemConfiguration" -framework "Security" -framework "OpenGLES" -framework "CoreLocation" -framework "MessageUI" -framework "QuartzCore" -framework "CoreGraphics" -framework "CoreTelephony" -framework "AVFoundation" -framework "MediaPlayer" -framework "CoreMotion" -framework "AudioToolbox"
  */
 
 
@@ -32,7 +34,9 @@
 #import <BaiduMapAPI_Search/BMKSearchComponent.h>
 // location
 #import <BaiduMapAPI_Location/BMKLocationComponent.h>
-//#import "BNCoreServices.h"
+// navi
+#import "BNCoreServices.h"
+
 @interface SYBDMapKit : NSObject
 {
     

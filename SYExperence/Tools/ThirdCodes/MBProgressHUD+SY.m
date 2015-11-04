@@ -45,8 +45,8 @@
     // 快速显示一个提示信息
     MBProgressHUD *hud = [MBProgressHUD showHUDAddedTo:view animated:YES];
     hud.mode = MBProgressHUDModeCustomView;
-    hud.cornerRadius = 0;
-    hud.color = [UIColor clearColor];
+    hud.cornerRadius = 2;
+//    hud.color = [UIColor clearColor];
 
 //    hud.customView = option;
     hud.labelText = message;
